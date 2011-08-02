@@ -1,0 +1,11 @@
+name: QuickTown
+main: x1337x.QuickTown.QuickTown
+version: 1.0
+description: QuickTowns :D
+authors:
+  - x1337x
+commands:
+   town:
+     description: Create a town
+     usage: /<command> [townname]
+  
