@@ -1,0 +1,12 @@
+author: matters123 and 1337
+database: false
+description: Townmaker addon for QuickTown
+main: x1337x.matter123.quicktown.townmaker.TownMaker
+name: QuickTown_Townmaker
+version: '1.0'
+commands:
+  town :
+    description: 'used to create a town'
+    usage: |
+      /<command> create [townname]
+     
