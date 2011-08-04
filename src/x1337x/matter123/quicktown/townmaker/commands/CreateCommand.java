@@ -58,9 +58,7 @@ public CreateCommand(TownMaker plugin){
 public boolean doCommand(CommandSender arg0, Command arg1, String arg2,
 		String[] arg3) throws IncompleteRegionException, RegionErrorException, CommandException, IOException, NoPermissionException{
 	Player pplayer = (Player)arg0;
-	if(!plugin.has("town.create.name", pplayer)){
-		throw new NoPermissionException(new Throwable(), "you do not have the permission node ", pplayer, "town.create.name");
-	}
+	
 	if(arg3.length == 1){
 		throw new CommandException(new Throwable(), " you must give a townname!", "/town create", "Error executing command",pplayer
 				);
@@ -69,8 +67,10 @@ public boolean doCommand(CommandSender arg0, Command arg1, String arg2,
 		throw new CommandException(new Throwable(), " To many arguments", "/town create", "Error executing command",pplayer
 		);
 	}
+	if(!plugin.has("town.create." + arg3[1], pplayer)){
+		throw new NoPermissionException(new Throwable(), "you do not have the permission node ", pplayer, "town.create." + arg3[1]);
+	}
 	
-	LocalPlayer player =  new BukkitPlayer(plugin.worldeditplugin, new BukkitServerInterface(plugin.worldeditplugin, this.plugin.getServer()), pplayer);
 	LocalSession session = plugin.worldeditapi.getSession(pplayer);
 	if(session == null){
 		throw new RegionErrorException(new Throwable(),"You need to select a compleate region!",pplayer);
