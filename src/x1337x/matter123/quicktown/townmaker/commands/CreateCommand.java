@@ -98,7 +98,12 @@ public boolean doCommand(CommandSender arg0, Command arg1, String arg2,
     c.setProperty("town.width", width);
     c.setProperty("town.length", length);
    
-    
+    for(BlockVector vec : region){
+    	ax= Math.min(ax,vec.getBlockX());
+    	ay= Math.min(ay,vec.getBlockX());
+    	az= Math.min(az,vec.getBlockX());
+    	
+    }
     
    int blocks = 0;
 	for(BlockVector vec : region){
