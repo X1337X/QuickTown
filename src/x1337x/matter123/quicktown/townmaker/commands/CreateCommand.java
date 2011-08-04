@@ -71,7 +71,7 @@ public boolean doCommand(CommandSender arg0, Command arg1, String arg2,
 		throw new RegionErrorException(new Throwable(),"You need to select a compleate region!",pplayer);
 	}
     Region region = session.getRegionSelector().getRegion();
-    Configuration c = new Configuration(new File("plugins/QuickTown/Towns/" + arg3[1] + ".cfg"));
+    Configuration c = new Configuration(new File("plugins/QuickTown/Towns/" + arg3[1] + ".yml"));
     File f = new File("plugins/QuickTown/Towns");
     if(!f.exists()){
     	f.mkdirs();
