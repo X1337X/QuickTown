@@ -100,8 +100,8 @@ public boolean doCommand(CommandSender arg0, Command arg1, String arg2,
    
     for(BlockVector vec : region){
     	ax= Math.min(ax,vec.getBlockX());
-    	ay= Math.min(ay,vec.getBlockX());
-    	az= Math.min(az,vec.getBlockX());
+    	ay= Math.min(ay,vec.getBlockY());
+    	az= Math.min(az,vec.getBlockZ());
     	
     }
     
