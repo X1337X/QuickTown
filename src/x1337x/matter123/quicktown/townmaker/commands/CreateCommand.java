@@ -3,7 +3,6 @@ package x1337x.matter123.quicktown.townmaker.commands;
 import java.io.File;
 import java.io.IOException;
 
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -13,13 +12,13 @@ import org.bukkit.util.config.Configuration;
 
 import x1337x.matter123.quicktown.townmaker.TownMaker;
 import x1337x.matter123.quicktown.townmaker.exceptions.CommandException;
+import x1337x.matter123.quicktown.townmaker.exceptions.NoPermissionException;
 import x1337x.matter123.quicktown.townmaker.exceptions.RegionErrorException;
 
 import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldedit.IncompleteRegionException;
 import com.sk89q.worldedit.LocalPlayer;
 import com.sk89q.worldedit.LocalSession;
-import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.bukkit.BukkitPlayer;
 import com.sk89q.worldedit.bukkit.BukkitServerInterface;
 import com.sk89q.worldedit.regions.Region;
@@ -50,15 +49,18 @@ public CreateCommand(TownMaker plugin){
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch (NoPermissionException e) {
+			// TODO Auto-generated catch block
+			e.getPlayer().sendMessage(e.getMessage() + e.getPermission());
 		}
 		return false;
 	}
 public boolean doCommand(CommandSender arg0, Command arg1, String arg2,
-		String[] arg3) throws IncompleteRegionException, RegionErrorException, CommandException, IOException{
+		String[] arg3) throws IncompleteRegionException, RegionErrorException, CommandException, IOException, NoPermissionException{
 	Player pplayer = (Player)arg0;
-	int px = pplayer.getLocation().getBlockX();
-    int py = pplayer.getLocation().getBlockY();
-    int pz = pplayer.getLocation().getBlockZ();
+	if(!plugin.has("town.create.name", pplayer)){
+		throw new NoPermissionException(new Throwable(), "you do not have the permission node ", pplayer, "town.create.name");
+	}
 	if(arg3.length == 1){
 		throw new CommandException(new Throwable(), " you must give a townname!", "/town create", "Error executing command",pplayer
 				);
@@ -99,10 +101,12 @@ public boolean doCommand(CommandSender arg0, Command arg1, String arg2,
     c.setProperty("town.length", length);
    
     for(BlockVector vec : region){
-        pplayer.sendMessage(vec.getBlockX() + "  " + vec.getBlockY() + "   " + vec.getBlockZ());
-    	ax= ax <vec.getBlockX()?ax:vec.getBlockX();
-    	ay= ay <vec.getBlockY()?ay:vec.getBlockY();
-    	az= az <vec.getBlockZ()?az:vec.getBlockZ();
+    	
+    	 		
+    	  
+    	 ax= Math.min(ax,vec.getBlockX());
+    	 ay= Math.min(ay,vec.getBlockY());
+    	 az= Math.min(az,vec.getBlockZ());
     	
     }
     
