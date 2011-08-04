@@ -92,30 +92,12 @@ public boolean doCommand(CommandSender arg0, Command arg1, String arg2,
     int length = region.getLength();
    
     String townname = arg3[1];
-    Vector firstposv = region.getMinimumPoint();
-    Vector secondposv = region.getMaximumPoint();
-    int fx = firstposv.getBlockX();
-    int fy = firstposv.getBlockY();
-    int fz = firstposv.getBlockZ();
-    
-    int rfx = fx - fx;
-    int rfy = fy-fy;
-    int rfz =  fz - fz;
-    
-    int sx = secondposv.getBlockX();
-    int sy = secondposv.getBlockY();
-    int sz = secondposv.getBlockZ();
-    
-    int rsx = Math.abs(sx - rfx);
-    int rsy = Math.abs(sy - rfy);
-    int rsz = Math.abs(sz - rfz);
-    
+   
     c.setProperty("town.name", townname.toLowerCase());
     c.setProperty("town.height",height);
     c.setProperty("town.width", width);
     c.setProperty("town.length", length);
-    c.setProperty("town.firstpos", rfx + "." + rfy + "." + rfz);
-    c.setProperty("town.secondpos", rsx + "." + rsy + "." + rsz);
+   
     
     
    int blocks = 0;
