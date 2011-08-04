@@ -82,9 +82,9 @@ public boolean doCommand(CommandSender arg0, Command arg1, String arg2,
     if(!f.exists()){
     	f.mkdirs();
     }
-    int ax = 0;
-    int ay = 0;
-    int az = 0;
+    int ax = Integer.MAX_VALUE;
+    int ay = Integer.MAX_VALUE;
+    int az = Integer.MAX_VALUE;
     
     
     int height = region.getHeight();
@@ -99,20 +99,22 @@ public boolean doCommand(CommandSender arg0, Command arg1, String arg2,
     c.setProperty("town.length", length);
    
     for(BlockVector vec : region){
-    	ax= Math.min(ax,vec.getBlockX());
-    	ay= Math.min(ay,vec.getBlockY());
-    	az= Math.min(az,vec.getBlockZ());
+        pplayer.sendMessage(vec.getBlockX() + "  " + vec.getBlockY() + "   " + vec.getBlockZ());
+    	ax= ax <vec.getBlockX()?ax:vec.getBlockX();
+    	ay= ay <vec.getBlockY()?ay:vec.getBlockY();
+    	az= az <vec.getBlockZ()?az:vec.getBlockZ();
     	
     }
     
    int blocks = 0;
 	for(BlockVector vec : region){
-		   Block block =  pplayer.getWorld().getBlockAt(vec.getBlockX(), vec.getBlockY(), vec.getBlockZ());
-		int bx=vec.getBlockX()-ax;
-		int by=vec.getBlockY()-ay;
-		int bz=vec.getBlockZ()-az;
+	    Block block =  pplayer.getWorld().getBlockAt(vec.getBlockX(), vec.getBlockY(), vec.getBlockZ());
+		int bx= vec.getBlockX()-ax;
+		int by= vec.getBlockY()-ay;
+		int bz= vec.getBlockZ()-az;
+		
 		c.setProperty("town.blocks." + bx + "."+ by + "." + bz,block.getTypeId());
-		 blocks++;
+		blocks++;
 	}
 	c.setProperty("town.blockamount", blocks);
 	      c.save();
