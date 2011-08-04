@@ -19,6 +19,7 @@ import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldedit.IncompleteRegionException;
 import com.sk89q.worldedit.LocalPlayer;
 import com.sk89q.worldedit.LocalSession;
+import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.bukkit.BukkitPlayer;
 import com.sk89q.worldedit.bukkit.BukkitServerInterface;
 import com.sk89q.worldedit.regions.Region;
@@ -55,7 +56,9 @@ public CreateCommand(TownMaker plugin){
 public boolean doCommand(CommandSender arg0, Command arg1, String arg2,
 		String[] arg3) throws IncompleteRegionException, RegionErrorException, CommandException, IOException{
 	Player pplayer = (Player)arg0;
-	pplayer.sendMessage("length = " + arg3.length + "Message " + arg3);
+	int px = pplayer.getLocation().getBlockX();
+    int py = pplayer.getLocation().getBlockY();
+    int pz = pplayer.getLocation().getBlockZ();
 	if(arg3.length == 1){
 		throw new CommandException(new Throwable(), " you must give a townname!", "/town create", "Error executing command",pplayer
 				);
@@ -71,48 +74,62 @@ public boolean doCommand(CommandSender arg0, Command arg1, String arg2,
 		throw new RegionErrorException(new Throwable(),"You need to select a compleate region!",pplayer);
 	}
     Region region = session.getRegionSelector().getRegion();
+    if(region == null){
+		throw new RegionErrorException(new Throwable(),"You need to select a compleate region!",pplayer);
+	}
     Configuration c = new Configuration(new File("plugins/QuickTown/Towns/" + arg3[1] + ".yml"));
     File f = new File("plugins/QuickTown/Towns");
     if(!f.exists()){
     	f.mkdirs();
     }
+    int ax = 0;
+    int ay = 0;
+    int az = 0;
+    
+    
     int height = region.getHeight();
     int width = region.getWidth();
     int length = region.getLength();
    
     String townname = arg3[1];
+    Vector firstposv = region.getMinimumPoint();
+    Vector secondposv = region.getMaximumPoint();
+    int fx = firstposv.getBlockX();
+    int fy = firstposv.getBlockY();
+    int fz = firstposv.getBlockZ();
+    
+    int rfx = fx - fx;
+    int rfy = fy-fy;
+    int rfz =  fz - fz;
+    
+    int sx = secondposv.getBlockX();
+    int sy = secondposv.getBlockY();
+    int sz = secondposv.getBlockZ();
+    
+    int rsx = Math.abs(sx - rfx);
+    int rsy = Math.abs(sy - rfy);
+    int rsz = Math.abs(sz - rfz);
     
     c.setProperty("town.name", townname.toLowerCase());
     c.setProperty("town.height",height);
     c.setProperty("town.width", width);
     c.setProperty("town.length", length);
-  
+    c.setProperty("town.firstpos", rfx + "." + rfy + "." + rfz);
+    c.setProperty("town.secondpos", rsx + "." + rsy + "." + rsz);
     
-    int px = pplayer.getLocation().getBlockX();
-    int py = pplayer.getLocation().getBlockY();
-    int pz = pplayer.getLocation().getBlockZ();
-    int blocks = 0;
-	for (BlockVector vec : region) { 
-   Block block =  pplayer.getWorld().getBlockAt(vec.getBlockX(), vec.getBlockY(), vec.getBlockZ());
-   Material material = block.getType();
-   int id = material.getId();
-   int x = vec.getBlockX();
-   int y = vec.getBlockY();
-   int z = vec.getBlockZ();
-  
-   
-   
-   int rx = x - px;
-   int ry = y - py;
-   int rz = z - pz;
-   blocks++;
-   c.setProperty("town.blocks." + rx + "."+ ry + "." + rz + "." +".",id);
-  
-   
-   
+    
+   int blocks = 0;
+	for(BlockVector vec : region){
+		   Block block =  pplayer.getWorld().getBlockAt(vec.getBlockX(), vec.getBlockY(), vec.getBlockZ());
+		int bx=vec.getBlockX()-ax;
+		int by=vec.getBlockY()-ay;
+		int bz=vec.getBlockZ()-az;
+		c.setProperty("town.blocks." + bx + "."+ by + "." + bz,block.getTypeId());
+		 blocks++;
 	}
+	c.setProperty("town.blockamount", blocks);
 	      c.save();
-	      pplayer.sendMessage("Town Saved!"  + blocks);
+	      pplayer.sendMessage("Town Saved! with "  + blocks + " blocks in it");
 	return true;
 	
 }
