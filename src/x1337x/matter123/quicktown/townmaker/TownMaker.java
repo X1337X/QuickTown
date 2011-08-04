@@ -3,63 +3,63 @@ package x1337x.matter123.quicktown.townmaker;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.bukkit.event.Event.Priority;
+import org.bukkit.event.Event.Type;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import x1337x.matter123.quicktown.townmaker.commands.CreateCommand;
 import x1337x.matter123.quicktown.townmaker.exceptions.PluginMissingException;
+import x1337x.matter123.quicktown.townmaker.listeners.sListener;
 
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.WorldEditAPI;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 
+@SuppressWarnings("deprecation")
 public class TownMaker extends JavaPlugin {
-public static WorldEdit worldedit = null;
-public static WorldEditAPI worldeditapi = null;
-public static WorldEditPlugin worldeditplugin = null;
+public  WorldEditPlugin worldeditplugin = null;
+public  WorldEdit worldedit = null;
+public  WorldEditAPI worldeditapi = null;
 public TownMaker instance = null;
-Logger log = this.getServer().getLogger();
+Logger log = Logger.getLogger("Minecraft");
 	@Override
 	public void onDisable() {
 		// TODO Auto-generated method stub
-		TownMaker.worldedit = null;
-	    TownMaker.worldeditapi = null;
-	    TownMaker.worldeditplugin = null;
+		this.worldedit = null;
+	    this.worldeditapi = null;
+	    this.worldeditplugin = null;
 	    this.instance = null;
-	    log(Level.INFO,"Made by matters123 and 1337 is enabled");
+	    log(Level.INFO,"Made by matters123 and 1337 is disabled");
 	    
 	}
 
 
-	@SuppressWarnings("deprecation")
+
 	@Override
 	public void onEnable() {
-		// TODO Auto-generated method stub
-	try {
 		this.instance = this;
-		worldeditplugin = getWorldEdit();
-		worldeditapi = worldeditplugin.getAPI();
-        worldedit = worldeditplugin.getWorldEdit();
-        this.getCommand("town").setExecutor(new CreateCommand(this));
-		
-	} catch (PluginMissingException e) {
-		// TODO Auto-generated catch block
-		log(Level.SEVERE, e.getMessage());
-		this.getServer().getPluginManager().disablePlugin(this);
-	}
+		this.getServer().getPluginManager().registerEvent(Type.PLUGIN_ENABLE, new sListener(this), Priority.Highest, this);
+	this.getCommand("town").setExecutor(new CreateCommand(this));
 	log(Level.INFO,"Made by matters123 and 1337 is enabled");
 	}
-public WorldEditPlugin getWorldEdit() throws PluginMissingException{
-	Plugin worldedit = this.getServer().getPluginManager().getPlugin("World Edit");
+public WorldEditPlugin getWorldEdit(){
+	Plugin worldedit = this.getServer().getPluginManager().getPlugin("WorldEdit");
 	
 	if(worldedit == null){
-		throw new PluginMissingException(new Throwable(), " could not be found disabling..", "World Edit");
+		try {
+			throw new PluginMissingException(new Throwable(), " could not be found disabling..", "WorldEdit");
+		} catch (PluginMissingException e) {
+			// TODO Auto-generated catch block
+			log(Level.SEVERE, e.getMessage());
+			this.getServer().getPluginManager().disablePlugin(this);
+		}
 	}
 	
-	else{
+	
 		return (WorldEditPlugin) worldedit;
-	}
+	
 }
 public String getName()
 {
@@ -73,5 +73,11 @@ public String getVersion() {
 public void log(Level level,String message){
 	String newmessage = "[" + getName() + " : " + getVersion() + "] " + message;
 	log.log(level, newmessage);
+}
+public void onWorldEditEnable(){
+	this.worldeditplugin = getWorldEdit();
+	this.worldedit = worldeditplugin.getWorldEdit();
+	this.worldeditapi = worldeditplugin.getAPI();
+	
 }
 }
