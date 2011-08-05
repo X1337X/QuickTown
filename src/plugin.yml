@@ -1,0 +1,12 @@
+author: matters123 and 1337
+database: false
+description: Townmaker addon for QuickTown
+main: com.matter123.QuickTown.QuickTown
+name: QuickTown
+version: '1.0'
+commands:
+  newtown :
+    description: 'used to put a saved town into the world'
+    usage: |
+      /<command> [townname]
+     
